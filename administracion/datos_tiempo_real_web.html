@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Datos en tiempo real</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Siembra app para el campo" name="keywords">
+    <meta
+        content="Siembra app se define como una aplicación móvil para el comercio de productos del campo entre organizaciones y fomentar la comunicación entre distintos actores y usuarios a través de un solo lugar, también ofrece una gama de herramientas que facilitan algunas tareas entre los usuarios."
+        name="description">
+
+    <!-- Favicon -->
+    <link href="../img/icono.png" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!--Librerías y estilos-->
+    <link href="../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="../lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+
+    <!--Funcion de busqueda-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dataTable = document.getElementById("data-table");
+            const dataBody = document.getElementById("data-body");
+            const searchInput = document.getElementById("search-input");
+            const progressBar = document.getElementById("progress-bar");
+            let data = [];
+            let registros = 0;
+            let variableValueElement = document.getElementById("registros");
+            let sumDatos = 0;
+            let variable_ha = document.getElementById("sum-ha");
+
+            progressBar.style.display = "block"; // Mostrar la barra de progreso
+
+            fetch("https://www.datos.gov.co/resource/prwt-hcai.json")
+                .then(response => response.json())
+                .then(apiData => {
+                    data = apiData;
+                    renderData();
+                    progressBar.style.display = "none"; // Ocultar la barra de progreso después de cargar los datos
+                })
+                .catch(error => {
+                    console.error("Error al obtener los datos:", error);
+                });
+
+            const renderData = () => {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const filteredData = data.filter(item => {
+                    return (
+                        item.departamen.toLowerCase().includes(searchTerm) ||
+                        item.municipio.toLowerCase().includes(searchTerm)
+                    );
+                });
+
+                dataBody.innerHTML = "";
+                for (const item of filteredData) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                            <td style="color: #606060; text-align: center;">${item.departamen}</td>
+                            <td style="color: #606060; text-align: center;">${item.municipio}</td>
+                            <td style="color: #606060; text-align: center;">${item.area_ha}</td>
+                        `;
+                    dataBody.appendChild(row);
+                    registros++;
+                    sumDatos += parseFloat(item.area_ha);
+                }
+
+                variableValueElement.textContent = `Registros encontrados: ${registros}`;
+                registros = 0;
+
+                variable_ha.textContent = `Total, de hectáreas halladas: ${sumDatos.toFixed(4)} (ha)`;
+                sumDatos = 0;
+            };
+
+            searchInput.addEventListener("input", renderData);
+        });
+    </script>
+
+</head>
+
+<body>
+    <!-- Barra superior -->
+    <div class="container-fluid bg-light pt-3 d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
+                    <div class="d-inline-flex align-items-center">
+                        <p><i class="fa fa-envelope mr-2"></i><a href="mailto:siembraappmovil@gmail.com"
+                                style="text-decoration: none;">siembraappmovil@gmail.com</a></p>
+                        <p class="text-body px-3">|</p>
+                        <p><i class="fa fa-phone-alt mr-2"></i>+57 321
+                            6659724</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center text-lg-right">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-primary px-3" href>
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-primary px-3" href>
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-primary px-3" href>
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a class="text-primary pl-3" href>
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- barra superior final -->
+
+    <!-- Barra de navegacion incio -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
+                <a href="../index.html" class="navbar-brand">
+                    <h1 class="m-0 text-primary"><span class="text-dark">SIEMBRA</span>APP</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="../index.html" class="nav-item nav-link">Inicio</a>
+                        <a href="../media/agromedia.html" class="nav-item nav-link">AgroMedia</a>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle active"
+                                data-toggle="dropdown">Administración</a>
+                            <div class="dropdown-menu border-0 rounded-0 m-0">
+                                <a href="../administracion/calculadora.html" class="dropdown-item">Calculadora precio de venta de producto</a>
+
+                                <a href="datos_tiempo_real_web.html" class="dropdown-item active">Datos en
+                                    tiempo real</a>
+                                    <a href="../administracion/lectorQR.html" class="dropdown-item">Lector de códigos QR</a>
+
+                                <a target="_blank" href="https://36df1e.myshopify.com/blogs/news"
+                                    class="dropdown-item">Blog</a>
+                                <a href="../administracion/pqr_sugerencias_web.html" class="dropdown-item">PQRS y
+                                    Sugerencias</a>
+                                <a href="../politica_privacidad/politica_privacidad.html" class="dropdown-item">Política
+                                    de privacidad</a>
+                                <a href="../politica_privacidad/seguridad_descargo_responsabilidad.html"
+                                    class="dropdown-item">Seguridad y
+                                    descargo de responsabilidad</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Departamentos</a>
+                            <div class="dropdown-menu border-0 rounded-0 m-0">
+                                <a href="../organizaciones_web/bolivar.html" class="dropdown-item">Bolívar</a>
+                                <a href="../organizaciones_web/cordoba.html" class="dropdown-item">Córdoba</a>
+                                <a href="../organizaciones_web/nariño.html" class="dropdown-item">Nariño</a>
+                                <a href="../organizaciones_web/putumayo.html" class="dropdown-item">Putumayo</a>
+                            </div>
+                        </div>
+
+                        <a href="../ayuda/web/documentacion.html" class="nav-item nav-link">Documentación</a>
+                        <!--Agregar enlace para descargar el archivo-->
+                        <a href="../ayuda/FAQ.html" class="nav-item nav-link">Ayuda</a>
+                        <!--Falta agregar link y pagina-->
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Barra de navegación final -->
+
+    <!-- Navegación inicio -->
+
+    <div class="container-fluid page-header datos-tiempo-real">
+        <div class="container">
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+                <h5 style="text-align: center;" class="display-4 text-white text-uppercase">Información
+                    de Agricultura
+                    Familiar en
+                    Colombia</h5>
+                <div class="d-inline-flex text-white">
+                    <p class="m-0 text-uppercase"><a class="text-white" href="../index.html">Inicio</a></p>
+                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
+                    <p class="m-0 text-uppercase">Datos en tiempo real</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- navegacion final -->
+
+    <!-- Busqueda inicio -->
+    <div class="container-fluid booking mt-3 pb-3">
+        <div class="container pb-2">
+            <div class="bg-light shadow" style="padding: 30px;">
+                <div class="row align-items-center" style="min-height: 50px;">
+                    <input style="text-transform: uppercase;" type="text" class="form-control" id="search-input"
+                        placeholder="Buscar datos">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Busqueda final -->
+
+    <!-- Muestreo de datos en tiempo real -->
+    <div class="container-fluid py-3">
+        <div class="container py-2">
+
+            <p class="color-texto-p" style="text-align: left;" id="registros"></p>
+            <p class="color-texto-p" style="text-align: left;" id="sum-ha"></p>
+
+            <div class="progress" id="progress-bar" style="display: none;">
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar"
+                    style="width: 100%">
+
+                    <p>Espera mientras cargamos los datos...</p>
+
+                </div>
+            </div>
+
+            <br>
+            <table id="data-table" class="table table-bordered">
+                <thead class="tabla">
+                    <tr class="table-success">
+                        <th style="color: #146215; text-align: center;">Departamento</th>
+                        <th style="color: #146215; text-align: center;">Municipio</th>
+                        <th style="color: #146215; text-align: center;">Área
+                            (ha)</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body"></tbody>
+            </table>
+
+            <p class="color-texto-p">Los datos son procesados en tiempo real
+                y son
+                obtenidos a través del
+                repositorio de datos abiertos de <a target="_blank"
+                    href="https://www.datos.gov.co/">https://www.datos.gov.co/</a></p>
+
+        </div>
+    </div>
+    <!-- Final de muestreo de datos en tiempo real -->
+
+    <!-- Pie de página inicio -->
+    <div class="container-fluid bg-dark text-white-50 py-5 px-sm-3 px-lg-5" style="margin-top: 90px;">
+        <div class="row pt-5">
+            <div class="col-lg-3 col-md-6 mb-5">
+                <a href="../index.html" class="navbar-brand">
+                    <h1 class="text-primary"><span class="text-white">SIEMBRA</span>APP</h1>
+                </a>
+                <p>La web SiembraAPP es un producto elaborado por las comunidades participantes en el marco del proyecto
+                    "Transformación territorial, resiliencia y Sostenibilidad" financiado por el gobierno de Suecia e
+                    implementado con la cooperación técnica de la Organización de las Naciones Unidas para la
+                    Alimentación y Agricultura FAO.</p>
+                <h6 class="text-white text-uppercase mt-4 mb-3" style="letter-spacing: 5px;">Síguenos en</h6>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-outline-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Nuestros servicios</h5>
+                <div class="d-flex flex-column justify-content-start">
+                    <a class="text-white-50 mb-2" target="_blank" href="https://siembraappmovil.myshopify.com/"><i
+                            class="fa fa-angle-right mr-2"></i>Tienda</a>
+                    <a class="text-white-50 mb-2" target="_blank"
+                        href="https://apk.e-droid.net/apk/app2044477.apk?v=35"><i
+                            class="fa fa-angle-right mr-2"></i>Mensajes</a>
+                    <a class="text-white-50 mb-2" target="_blank"
+                        href="https://apk.e-droid.net/apk/app2044477.apk?v=35"><i
+                            class="fa fa-angle-right mr-2"></i>Foro</a>
+                    <a class="text-white-50 mb-2" target="_blank"
+                        href="https://apk.e-droid.net/apk/app2044477.apk?v=35"><i
+                            class="fa fa-angle-right mr-2"></i>AgroMedia</a>
+                    <a class="text-white-50 mb-2" target="_blank"
+                        href="https://siembraappmovil.myshopify.com/collections/productos-procesados-por-mujeres"><i
+                            class="fa fa-angle-right mr-2"></i>Mujeres</a>
+                    <a class="text-white-50" target="_blank" href="https://siembraappmovil.myshopify.com/blogs/news"><i
+                            class="fa fa-angle-right mr-2"></i>Blog</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">ENLACES ÚTILES</h5>
+                <div class="d-flex flex-column justify-content-start">
+                    <a class="text-white-50 mb-2"
+                        href="https://admin.shopify.com/store/36df1e/products?selectedView=all"><i
+                            class="fa fa-angle-right mr-2"></i>Gestión de
+                        productos</a>
+                    <a class="text-white-50 mb-2"
+                        href="https://admin.shopify.com/store/36df1e/orders?inContextTimeframe=last_30_days"><i
+                            class="fa fa-angle-right mr-2"></i>Gestión de
+                        pedidos</a>
+                    <a class="text-white-50 mb-2" target="_blank"
+                        href="https://drive.google.com/file/d/183SHzWTzud6zC9VC_YK5XVnYHKWT4Ck0/view?usp=drive_link"><i
+                            class="fa fa-angle-right mr-2"></i>Política
+                        privacidad</a>
+                    <a class="text-white-50 mb-2" href="../ayuda/FAQ.html"><i class="fa fa-angle-right mr-2"></i>Ayuda</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Contacto</h5>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>Proyecto 123
+                    FAO, Colombia</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+57 321 6659724</p>
+                <p><i class="fa fa-envelope mr-2"></i><a style="text-decoration: none;"
+                        href="mailto:siembraappmovil@gmail.com">siembraappmovil@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid bg-dark text-white border-top py-4 px-sm-3 px-md-5"
+        style="border-color: rgba(256, 256, 256, .1) !important;">
+        <div class="row">
+            <div class="col-lg-6 text-center text-md-left mb-3 mb-md-0">
+                <p class="m-0 text-white-50">SiembraApp &copy; <a href="../index.html">Inicio</a> | Diseño: José Ibáñez.
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- Pie de página final -->
+
+    <!-- Regresar al inicio -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="../lib/easing/easing.min.js"></script>
+    <script src="../lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="../lib/tempusdominus/js/moment.min.js"></script>
+    <script src="../lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="../js/main.js"></script>
+</body>
+
+</html>
