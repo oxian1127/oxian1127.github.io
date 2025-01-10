@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Calculadora precio de venta de producto</title>
+    <title>Eliminar Cuenta</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Siembra app para el campo" name="keywords">
     <meta
@@ -32,6 +32,9 @@
     <link href="../css/style.css" rel="stylesheet">
 
 </head>
+
+
+
 
 <body>
     <!-- Barra superior inicio-->
@@ -86,7 +89,7 @@
                             <a href="#" class="nav-link dropdown-toggle active"
                                 data-toggle="dropdown">Administración</a>
                             <div class="dropdown-menu border-0 rounded-0 m-0">
-                                <a href="calculadora.html" class="dropdown-item active">Calculadora precio de venta de
+                                <a href="calculadora.html" class="dropdown-item">Calculadora precio de venta de
                                     producto</a>
 
                                 <a href="../administracion/datos_tiempo_real_web.html" class="dropdown-item">Datos en
@@ -101,7 +104,7 @@
                                     de privacidad</a>
                                 <a href="../politica_privacidad/seguridad_descargo_responsabilidad.html"
                                     class="dropdown-item">Seguridad y descargo de responsabilidad</a>
-                                <a href="eliminarcuenta.html" class="dropdown-item">Solicitar eliminación de la
+                                <a href="eliminarcuenta.html" class="dropdown-item active">Solicitar eliminación de la
                                     cuenta</a>
                             </div>
                         </div>
@@ -132,13 +135,12 @@
     <div class="container-fluid page-header">
         <div class="container">
             <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-                <h3 style="text-align: center;" class="display-4 text-white text-uppercase">Calculadora de precio de
-                    venta
-                </h3>
+                <h3 style="text-align: center;" class="display-4 text-white text-uppercase">solicitar que se elimine mi
+                    cuenta</h3>
                 <div class="d-inline-flex text-white">
                     <p class="m-0 text-uppercase"><a class="text-white" href="../index.html">Inicio</a></p>
                     <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                    <p class="m-0 text-uppercase">Calculadora de precio de venta de productos</p>
+                    <p class="m-0 text-uppercase">Eliminar cuenta</p>
                 </div>
             </div>
         </div>
@@ -150,49 +152,30 @@
     <div class="container-fluid py-5">
         <div class="container pt-4">
 
-            <h3>Calculadora de Precio de Venta</h3>
-            <form id="calculator-form">
-                <div class="form-group">
-                    <label for="costo-produccion">Costo de
-                        Producción por Unidad:</label>
-                    <input type="number" class="form-control" id="costo-produccion"
-                        placeholder="Ingrese costo de producción por unidad">
+            <h1 class="text-center mb-4">Eliminar tu cuenta</h1>
+            <p class="text-center">Rellena este formulario para solicitar la eliminación de tu cuenta y todos los datos
+                asociados.</p>
+            <form action="mailto:siembraappmovil@gmail.com" method="post" enctype="text/plain"
+                class="shadow p-4 bg-white rounded">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nombre de usuario</label>
+                    <input type="text" class="form-control" id="username" name="username" required
+                        placeholder="Tu nombre de usuario">
                 </div>
-                <div class="form-group">
-                    <label for="margen-utilidad">Margen de
-                        Utilidad Deseado (%):</label>
-                    <input type="number" class="form-control" id="margen-utilidad"
-                        placeholder="Ingrese margen de utilidad deseado">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Tu correo">
                 </div>
-                <button type="button" class="btn btn-primary py-md-3 px-md-4 mt-2"
-                    onclick="calcularPrecioVenta()">Calcular</button>
+                <div class="mb-3">
+                    <label for="reason" class="form-label">Motivo (opcional)</label>
+                    <textarea class="form-control" id="reason" name="reason" rows="3"
+                        placeholder="Razón para eliminar la cuenta"></textarea>
+                </div>
+                <button type="submit" class="btn btn-danger w-100">Enviar solicitud</button>
             </form>
-            <div style="color: red;" id="resultado" class="mt-4"></div>
+
         </div>
     </div>
-
-    <!-- Sección principal final -->
-
-    <script>
-        function calcularPrecioVenta() {
-            const costoProduccion = parseFloat(document.getElementById("costo-produccion").value);
-            const margenUtilidad = parseFloat(document.getElementById("margen-utilidad").value);
-
-            if (isNaN(costoProduccion) || isNaN(margenUtilidad)) {
-                document.getElementById("resultado").innerHTML = "Por favor, ingrese valores válidos."
-                return;
-            }
-
-            const precioVenta = costoProduccion / (1 - margenUtilidad / 100);
-
-            const resultadoHTML = `
-                <h4>Resultado:</h4>
-                <p>Precio de Venta Recomendado: $${precioVenta.toFixed(2)}</p>
-            `;
-
-            document.getElementById("resultado").innerHTML = resultadoHTML;
-        }
-    </script>
 
 
     <!-- Pie de página inicio -->
