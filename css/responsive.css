@@ -1,0 +1,217 @@
+/* ==========================================================================
+   DISEÑO RESPONSIVO Y ACCESIBILIDAD
+   Media queries para móvil, tablet, escritorio y reduced-motion
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   NAVEGACIÓN MÓVIL INFERIOR
+   -------------------------------------------------------------------------- */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(7, 11, 25, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-subtle);
+  z-index: 90;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+.bottom-nav-item {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.bottom-icon {
+  font-size: 1.15rem;
+}
+
+.bottom-text {
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.bottom-nav-item.nav-active {
+  color: var(--cyan-electric);
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.sidebar-backdrop.backdrop-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   PANTALLAS MEDIANAS (TABLETS / < 1024px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "topbar"
+      "main";
+  }
+
+  .btn-icon-menu {
+    display: block;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    top: var(--topbar-height);
+    left: -280px;
+    bottom: 0;
+    width: 270px;
+    z-index: 200;
+    transition: left var(--transition-normal);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+  }
+
+  .app-sidebar.sidebar-open {
+    left: 0;
+  }
+
+  .dashboard-middle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .route-board-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .debug-workstation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   PANTALLAS PEQUEÑAS (MÓVILES / < 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .app-main-content {
+    padding: 1.25rem 1rem 5rem 1rem; /* Espacio para barra inferior */
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  .hero-title {
+    font-size: 1.7rem;
+  }
+
+  .hero-narrative-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .missions-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievements-badges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .training-topics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-phases-stepper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .command-buttons-bar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .route-grid {
+    grid-template-columns: repeat(var(--grid-size, 4), 52px);
+    grid-template-rows: repeat(var(--grid-size, 4), 52px);
+  }
+
+  .robot-marker {
+    width: 36px;
+    height: 36px;
+  }
+
+  .robot-svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .user-info-text {
+    display: none; /* Simplificar chip en móvil */
+  }
+
+  .auth-actions {
+    flex-direction: column;
+  }
+
+  .auth-actions .btn {
+    width: 100%;
+  }
+
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: 74px;
+    max-width: 100%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   ACCESIBILIDAD: PREFERENCIA DE MOVIMIENTO REDUCIDO
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .pulse-ring,
+  .status-pulse-dot,
+  .badge-celebration-icon,
+  .nexo-hero-svg,
+  .target-marker,
+  .finale-city-glow {
+    animation: none !important;
+  }
+}

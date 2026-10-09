@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================================================================
+    // REGLAS DE SEGURIDAD PARA "CÓDIGO CERO: EL RESCATE DE CIUDAD ALGORITMIA"
+    // ========================================================================
+    // NOTA PEDAGÓGICA Y TÉCNICA:
+    // Esta aplicación utiliza un modelo de acceso simplificado orientado a 
+    // entornos de aula de secundaria (4.º ESO) sin registro de cuentas ni contraseñas.
+    //
+    // IMPORTANTE: En Firebase Firestore, las operaciones directas desde el cliente
+    // (navegador) son validadas por este motor de reglas ANTES de ser ejecutadas.
+    // No se debe configurar "allow read, write: if true;" de forma indiscriminada.
+    // ========================================================================
+
+    // Funciones auxiliares de validación de datos
+    function isValidAlias(alias) {
+      return alias is string && alias.size() >= 2 && alias.size() <= 20;
+    }
+
+    function isValidExperience(xp) {
+      return xp is number && xp >= 0 && xp <= 10000;
+    }
+
+    // ------------------------------------------------------------------------
+    // COLECCIÓN: players (Documento principal del participante)
+    // ------------------------------------------------------------------------
+    match /players/{playerId} {
+      // Permitir lectura a cualquier cliente para alimentar la clasificación pública y recuperación de partida
+      allow read: if true;
+
+      // Creación de jugador: validar estructura inicial
+      allow create: if request.resource.data.keys().hasAll(['playerId', 'alias', 'experience', 'rank'])
+                    && isValidAlias(request.resource.data.alias)
+                    && request.resource.data.experience == 0;
+
+      // Actualización: solo incrementos válidos de experiencia y actualización de campos
+      allow update: if isValidExperience(request.resource.data.experience)
+                    && (request.resource.data.experience >= resource.data.experience || request.resource.data.experience == 0);
+
+      // No permitir borrado indiscriminado directo de participantes
+      allow delete: if false;
+
+      // ----------------------------------------------------------------------
+      // SUBCOLECCIÓN: missionProgress (Progreso por cada misión)
+      // ----------------------------------------------------------------------
+      match /missionProgress/{missionId} {
+        allow read: if true;
+        allow write: if request.resource.data.score is number && request.resource.data.score >= 0;
+      }
+
+      // ----------------------------------------------------------------------
+      // SUBCOLECCIÓN: challengeResults (Resultados individuales de retos)
+      // ----------------------------------------------------------------------
+      match /challengeResults/{challengeId} {
+        allow read: if true;
+        allow write: if request.resource.data.isCorrect is bool;
+      }
+
+      // ----------------------------------------------------------------------
+      // SUBCOLECCIÓN: badgeAwards (Insignias otorgadas)
+      // ----------------------------------------------------------------------
+      match /badgeAwards/{badgeId} {
+        allow read: if true;
+        allow create: if request.resource.data.badgeId is string;
+        allow update, delete: if false; // Una insignia no se modifica ni elimina una vez otorgada
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    // COLECCIÓN: missions (Definición de misiones)
+    // ------------------------------------------------------------------------
+    match /missions/{missionId} {
+      allow read: if true;
+      allow write: if false; // Solo administradores desde consola
+    }
+
+    // ------------------------------------------------------------------------
+    // COLECCIÓN: gameConfig (Configuración global)
+    // ------------------------------------------------------------------------
+    match /gameConfig/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ------------------------------------------------------------------------
+    // COLECCIÓN: activityLog (Registro de auditoría pedagógica)
+    // ------------------------------------------------------------------------
+    match /activityLog/{logId} {
+      allow read: if true;
+      // Solo permitir inserciones con campos básicos de evento
+      allow create: if request.resource.data.keys().hasAll(['playerId', 'eventType', 'description']);
+      allow update, delete: if false; // Registro inmutable
+    }
+  }
+}
